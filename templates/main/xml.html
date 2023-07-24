@@ -1,0 +1,39 @@
+{% extends "main/base.html" %}
+{% block body_block %}
+{% load static %}
+
+  <main id="main">
+
+    <!-- ======= Breadcrumbs ======= -->
+    <section class="breadcrumbs">
+      <div class="container">
+
+        <ol>
+          <li><a href="index.html">Home</a></li>
+          <li>XML Sitemap Creator</li>
+        </ol>
+        <h2>XML Sitemap Creator</h2>
+
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    <section class="inner-page">
+      <div class="container">
+        <p>
+          <h1>XML CSV Upload</h1>
+                <p>Upload the FeedManager CSV to convert to XML</p>
+                <p>Note: this will not convert SKU entries to URLs.</p>
+                  <form method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="form-group">
+                      <input type="file" name="csv_file" accept=".csv" required class="form-control-file">
+                    </div>
+                      <br><br>
+                      <button type="submit" class="btn btn-primary">Generate Sitemap</button>
+                  </form>
+        </p>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+{% endblock %}

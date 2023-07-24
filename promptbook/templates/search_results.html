@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}search{% endblock title %}
+
+{% block content %}
+  <h1 class="title">Search results for: "{{ query }}"</h1>
+
+  <h2 class="subtitle">Found Categories</h2>
+  <div class="columns is-multiline">
+    {% for category in found_categories %}
+      <div class="column is-one-third">
+        <div class="box">
+          <a href="{% url 'promptbook:list_prompts' category.pk %}">{{ category.name }}</a>
+        </div>
+      </div>
+    {% empty %}
+      <div class="column">
+        <p>No categories found.</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <h2 class="subtitle">Found Prompts</h2>
+  <div class="columns is-multiline">
+    {% for prompt in found_prompts %}
+      <div class="column is-one-third">
+        <div class="content">
+        <div class="box">
+          <p>{{ prompt.text|truncatechars:250 }} <span class="tag is-light">Length: {{ prompt.text|length }} chars...</span></p>
+          <hr />
+          <a href="{% url 'promptbook:list_prompts' prompt.category.pk %}" class="tag">{{ prompt.category.name }}</a>
+          <button style="color: rgb(27, 187, 49);" class="copy-button button is-small" data-clipboard-text="{{ prompt.text }}">
+            <span class="icon">
+              <i class="fas fa-thin fa-copy"></i>
+            </span>
+          </button>
+        </div>
+      </div>
+      </div>
+    {% empty %}
+      <div class="column">
+        <p>No prompts found.</p>
+      </div>
+    {% endfor %}
+  </div>
+  <div id="overlay" class="overlay"></div>
+  <div id="copy-notification" class="copy-notification">Copied prompt to clipboard <i class="fa-solid fa-face-smile-wink"></i></div>
+  <script>
+    const clipboard = new ClipboardJS('.copy-button');
+    const copyNotification = document.getElementById('copy-notification');
+    const overlay = document.getElementById('overlay');
+  
+    clipboard.on('success', () => {
+      overlay.style.display = 'block';
+      copyNotification.style.display = 'block';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        copyNotification.style.display = 'none';
+      }, 100);
+    });
+  </script>
+{% endblock %}

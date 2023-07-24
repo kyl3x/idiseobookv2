@@ -1,0 +1,40 @@
+{% extends "main/base.html" %}
+{% block body_block %}
+{% load static %}
+
+  <main id="main">
+
+    <!-- ======= Breadcrumbs ======= -->
+    <section class="breadcrumbs">
+      <div class="container">
+
+        <ol>
+          <li><a href="index.html">Home</a></li>
+          <li>Product Descriptions</li>
+        </ol>
+        <h2>Product Descriptions</h2>
+
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    <section class="inner-page">
+      <div class="container">
+          <h2>Upload a CSV to Generate Product Descriptions</h2>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+            <p> Our Automated Product Description Generation Tool is designed to assist professionals with the generation of product subtitles and descriptions. Utilizing sophisticated AI technology, the tool transforms the provided product titles and descriptions in a CSV file into new, engaging content.</p>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload</button>
+  </form>
+</div>
+</section>
+</main>
+
+{% endblock %}

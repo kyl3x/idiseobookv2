@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+{% block title %}categories{% endblock title %}
+
+{% block content %}
+  <style>  
+    .category-card {
+      background-color: #fff;
+      border-radius: 6px;
+      box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
+      color: #4a4a4a;
+      display: block;
+      padding: 1.25rem;
+      min-height: 18rem;
+    }
+
+    .category-label {
+      position: relative;
+      width: 10rem;
+      max-height: 20px;
+      left: 0.5rem;
+      background-color: #f2f2f2;
+      color: black;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      text-align: left;
+    }
+
+    .category-card:hover {
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+      transform: translateY(-5px);
+    }
+
+    .pastel-green {
+      background-color: #b8e6b5;
+    }
+
+    .pastel-blue {
+      background-color: #92B4EC;
+    }
+
+    .pastel-yellow {
+      background-color: #F8C766;
+    }
+
+    .pastel-pink {
+      background-color: #F6B7A2;
+    }
+
+    .add-category {
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      color: rgba(0, 0, 0, 0.7);
+      font-weight: 500;
+    }
+    
+    .popup {
+      display: none;
+      position: absolute;
+      top: -1.5em;
+      padding: 1em;
+      background-color: black;
+      color: white;
+      border: 1px solid #ccc;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+      border-radius: 10px;
+    }
+    
+    .category-card:hover .popup {
+      display: block;
+      opacity: 1;
+      color: white;
+    }
+
+    .category-name-control {
+      padding-bottom: 1rem;
+    }
+
+    .last-updated-btn {
+      padding-bottom: 1rem;
+      font-size: 10px;
+    }
+
+    .prompt-preview {
+      font-size: 10px;
+    }
+
+    .preview-section {
+      min-height: 5rem;
+    }
+
+    @media only screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) {
+      /* Your styles for iPhone 12 Pro go here */
+      .modal-card {
+        width: 85%;
+      }
+    }
+  </style>
+  <div class="container">
+    <h1 class="title">Categories</h1>
+    <p style="font-weight: 600">Welcome to Promptbook, a ChatGPT Prompt Management System (CPMS) that allows you to easily create, retrieve, and search your prompts.</p>
+  </div><br />
+  <button class="button add-category" id="add-category-button">
+    <span class="icon">
+      <i class="fas fa-plus"></i>
+    </span>
+    <span>Add Category</span>
+  </button>
+  <hr />
+  <div class="modal" id="add-category-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Add</p>
+        <button class="delete" aria-label="close" id="close-modal"></button>
+      </header>
+      <section class="modal-card-body">
+        <form id="add-category-form">
+          {% csrf_token %}
+          <div class="field">
+            <label for="category-name" class="label">Category name</label>
+            <div class="control category-name-control">
+              <input type="text" class="input" id="category-name" placeholder="Enter category name" required>
+            </div>
+            <label for="category-name" class="label">Help text</label>
+            <div class="control">
+              <input type="text" class="input" id="category-help-text" placeholder="Enter few comma-seprated use cases for this category" required>
+            </div>
+          </div>
+        </form>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button raised" id="save-category">Save</button>
+        <button class="button cancel-btn" id="cancel-category">Cancel</button>
+      </footer>
+    </div>
+  </div>  
+  <div class="container">
+    <h1 class="title">Pinned Categories</h1>
+  </div>
+  <div class="columns is-multiline">
+    {% for category in pinned_categories %}
+      <div class="column is-one-fifth">
+          <div class="category-card">
+            <div class="row">
+              <h3 class="title category-title">{{ category.name}}</h3>
+            </div>
+            <p class="is-size-7 has-text-weight-semibold prompt-count">Prompts: <span class="has-text-weight-normal">{{ category.num_prompts }}</span></p>
+            <section class="preview-section">
+            <p class="is-size-7 has-text-weight-semibold">Recetnly added prompts:</p>
+            <ul>
+              {% for prompt in category.recent_prompts %}
+              <li class="prompt-preview">* {{ prompt.text|truncatechars:50 }}</li>
+              {% empty %}
+              <li>None</li>
+              {% endfor %}
+            </ul>
+            </section>
+            <p class="is-size-8 has-text-weight-semibold last-updated-btn">Last updated: <span class="has-text-weight-normal">{{ category.last_updated }}</span></p>
+            <a href="{% url 'promptbook:list_prompts' category.id %}">
+              <button class="button explore-btn is-size-7">Explore</button>
+            </a>
+            <button class="pin-button button pin-btn is-size-7 is-danger is-light" data-category-id="{{ category.id }}">
+               Unpin
+            </button>
+          </div>
+      </div>
+      {% empty %}
+      <div class="column">
+        <p>No pinned categories found. Pin a category by clicking on the "Pin to top" button.</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="container">
+    <h1 class="title">Unpinned Categories</h1>
+  </div>
+  <div class="columns is-multiline">
+    {% for category in unpinned_categories %}
+      <div class="column is-one-fifth">
+          <div class="category-card">
+            <div class="row">
+              <h3 class="title category-title">{{ category.name}}</h3>
+            </div>
+            <p class="is-size-7 has-text-weight-semibold prompt-count">Prompts: <span class="has-text-weight-normal">{{ category.num_prompts }}</span></p>
+            <section class="preview-section">
+            <p class="is-size-7 has-text-weight-semibold">Recetnly added prompts:</p>
+            <ul>
+              {% for prompt in category.recent_prompts %}
+              <li class="prompt-preview">* {{ prompt.text|truncatechars:50 }}</li>
+              {% empty %}
+              <li>None</li>
+              {% endfor %}
+            </ul>
+            </section>
+            <p class="is-size-8 has-text-weight-semibold last-updated-btn">Last updated: <span class="has-text-weight-normal">{{ category.last_updated }}</span></p>
+            <a href="{% url 'promptbook:list_prompts' category.id %}">
+              <button class="button explore-btn is-size-7">Explore</button>
+            </a>
+            <button class="pin-button button pin-btn is-size-7 is-info is-light" data-category-id="{{ category.id }}">
+               Pin to top
+            </button>
+          </div>
+      </div>
+      {% empty %}
+      <div class="column">
+        <p>No categories found. Add one by clicking the "Add Category" button.</p>
+      </div>
+    {% endfor %}
+  </div>
+  <script>
+    $(document).ready(function() {
+    
+      $("#add-category-button").click(function() {
+        $("#add-category-modal").addClass("is-active");
+      });
+    
+      $("#close-modal, #cancel-category").click(function() {
+        $("#add-category-modal").removeClass("is-active");
+      });
+    
+      $("#save-category").click(function(event) {
+        event.preventDefault();
+        const categoryName = $("#category-name").val();
+        const categoryHelpText = $("#category-help-text").val();
+        if (categoryName.trim() !== "" && categoryHelpText.trim() !== "") {
+          $.ajax({
+            url: "{% url 'promptbook:create_category' %}",
+            type: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": "{{ csrf_token }}"
+            },
+            data: JSON.stringify({
+              name: categoryName,
+              helpText: categoryHelpText
+            }),
+            success: function() {
+              window.location.reload();
+            },
+            error: function(xhr, status, error) {
+              console.error(xhr.responseText);
+            }
+          });
+        }
+      });
+
+      $(".pin-button").click(function(event) {
+        event.preventDefault();
+        const categoryId = $(this).data("category-id");
+        const pinIcon = $(this).find("i");
+      
+        $.ajax({
+          url: `/categories/${categoryId}/toggle_pinned/`,
+          type: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}"
+          },
+          success: function(response) {
+            window.location.reload();
+          },
+          error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+          }
+        });
+      });
+
+
+    });
+    
+  </script>
+{% endblock %}

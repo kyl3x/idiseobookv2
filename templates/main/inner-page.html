@@ -1,0 +1,37 @@
+{% extends "main/base.html" %}
+{% block body_block %}
+{% load static %}
+
+  <main id="main">
+
+    <!-- ======= Breadcrumbs ======= -->
+    <section class="breadcrumbs">
+      <div class="container">
+
+        <ol>
+          <li><a href="index.html">Home</a></li>
+          <li>Inner Page</li>
+        </ol>
+        <h2>Inner Page</h2>
+
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    <section class="inner-page">
+      <div class="container">
+        <p>
+          <h1>Resize Image</h1>
+                <p>Enter an Image URL to download a resized, compressed version.</p>
+                  <form method="post">
+                      {% csrf_token %}
+                      <label for="image_url">Image URL:</label>
+                      <input type="text" id="image_url" name="image_url" required>
+                      <br><br>
+                      <input type="submit" value="Resize">
+                  </form>
+        </p>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+{% endblock %}

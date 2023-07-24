@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}editor{% endblock title %}
+
+{% block content %}
+<style>
+  .textarea {
+    background-color: #f2f2f2
+  }
+
+  .option {
+    font-weight: 500;
+  }
+
+  .sensitive-info-banner {
+    color: midnightblue;
+    font-size: 500;
+  }
+
+  .select-options {
+    font-family: 'Poppins', sans-serif;
+  }
+</style>
+{% if error_message %}
+<span class="mb-3 tag is-danger is-light is-medium">{{ error_message }}</span>
+{% endif %}
+<form method="post">
+  {% csrf_token %}
+  <div class="field">
+    <div class="columns">
+      <div class="column is-one-quarter">
+        <label class="label">Prompt Editor</label>
+      </div>
+      <div class="column">
+        <p class="sensitive-info-banner">(Important: Please do not enter sensitive information in ChatGPT)</p>
+      </div>
+    </div>
+    <div class="control">
+      <textarea placeholder="Add your text here..." class="textarea" name="prompt_text" rows="10" required></textarea>
+    </div>
+  </div>
+  <div class="field">
+    <label class="label">Category</label>
+    <div class="control">
+      <div>
+        <select class="select-options" name="category" required>
+          <option value="">Select a category</option>
+          {% for category in categories %}
+          <option value="{{ category.id }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <label class="label">Is Community Prompt ?</label>
+    <div class="control">
+      <div>
+        <select class="select-options" name="is-public-prompt">
+          <option value="yes">Yes</option>
+          <option value="no" selected>No</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <label class="label">Labels</label>
+    <div class="control">
+      <div>
+        <select name="labels" multiple>
+          {% for label in labels %}
+          <option value="{{ label.id }}">{{ label.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <div class="control">
+      <button type="submit" class="button">Save</button>
+      <button class="button cancel-btn"><a href="{% url 'promptbook:list_categories' %}"> Cancel</a></button>
+    </div>
+  </div>
+</form>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var sl = $('select').selectize({
+      plugins: ["clear_button"]
+    });
+    var control = sl[0].selectize;
+    {% if selected_category %}
+    control.setValue({{ selected_category }});
+  {% endif %}
+    });
+</script>
+{% endblock %}

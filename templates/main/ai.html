@@ -1,0 +1,40 @@
+{% extends "main/base.html" %}
+{% block body_block %}
+{% load static %}
+
+  <main id="main">
+
+    <!-- ======= Breadcrumbs ======= -->
+    <section class="breadcrumbs">
+      <div class="container">
+
+        <ol>
+          <li><a href="index.html">Home</a></li>
+          <li>Product Description Generator</li>
+        </ol>
+        <h2>Product Description Generator</h2>
+
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    <section class="inner-page">
+      <div class="container">
+        <h1>Product Description Generator</h1>
+          <form method="POST">
+            <div class="form-group">
+              {% csrf_token %}
+              <input type="text" name="url" placeholder="Enter the product URL" class="form-control">
+            </div>
+            <br>
+              <button class="btn btn-primary" type="submit">Generate Description</button>
+          </form>
+    {% if description %}
+        <h2>Generated Description:</h2>
+        <p>{{ description }}</p>
+    {% endif %}
+        </p>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+{% endblock %}

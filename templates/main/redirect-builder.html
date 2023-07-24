@@ -1,0 +1,64 @@
+{% extends "main/base.html" %}
+{% block body_block %}
+{% load static %}
+
+  <main id="main">
+
+    <!-- ======= Breadcrumbs ======= -->
+    <section class="breadcrumbs">
+      <div class="container">
+
+        <ol>
+          <li><a href="index.html">Home</a></li>
+          <li>URL Mapper</li>
+        </ol>
+        <h2>URL Mapper</h2>
+
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    <section class="inner-page">
+      <div class="container" id="submitMessage">
+        <p>
+          <h1>URL Mapper</h1>
+<!--           {% if processing %}
+          <p>Processing upload. Please wait. This may take a while depending on the size of the file...</p>
+          {% else %} -->
+          <p>Input a list of 'source' and 'destination' URLs to match based on the URL string.</p>
+          <br>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="file">CSV File:</label>
+                <input type="file" class="form-control-file" name="file" id="redirect-builder" required>
+            </div>
+            <br>
+            <button id="map-button" type="submit" class="btn btn-primary" disabled="disabled">Map!</button>
+            <script type="text/javascript">
+              var button = document.getElementById("map-button");
+              button.addEventListener("click", injectHTML);
+            </script>
+          </form>
+        <div id="targetDiv"></div>
+        <br>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+          $(document).ready(function() {
+            $('input[type="file"]').change(function() {
+              if ($(this).val() != "") {
+                $('#map-button').removeAttr('disabled');
+              } else {
+                $('#map-button').attr('disabled', 'disabled');
+              }
+            });
+          });
+          </script>
+        <img src="{% static '/assets/img/url-mapper-info.jpg' %}" class="img-fluid" alt="">
+        <!-- {% endif %} -->
+
+        </p>
+      </div>
+    </section>
+</script>
+  </main><!-- End #main -->
+{% endblock %}

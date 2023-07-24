@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block title %}login{% endblock title %}
+{% block content %}
+<section>
+  <style>
+    .button.is-google {
+      background-color: #4285F4;
+      color: white;
+      border: none;
+  }
+  .button.is-google:hover {
+      background-color: #357ae8;
+      color: white;
+  }
+  </style>
+    <div class="hero-body">
+        <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+              <div id="error-message" class="error" style="display: none;"></div>
+            <form class="box">
+                {% csrf_token %}
+                <div class="field">
+                <label for="" class="label">Username</label>
+                <div class="control has-icons-left">
+                    <input type="text" placeholder="e.g. bobsmith" class="input" id="username" required>
+                    <span class="icon is-small is-left">
+                    <i class="fa fa-user"></i>
+                    </span>
+                </div>
+                </div>
+                <div class="field">
+                <label for="" class="label">Password</label>
+                <div class="control has-icons-left">
+                    <input type="password" placeholder="*******" class="input" id="password" required>
+                    <span class="icon is-small is-left">
+                    <i class="fa fa-lock"></i>
+                    </span>
+                </div>
+                </div>
+                <div class="field">
+                <label for="" class="checkbox">
+                    <input type="checkbox">
+                    Remember me
+                </label>
+                </div>
+                <div class="field">
+                <button class="button is-success" id="login-button">
+                    Login
+                </button>
+                </div>
+            </form>
+            <a href="{% provider_login_url 'google' %}" class="button is-google">
+              <span class="icon">
+                  <i class="fab fa-google"></i>
+              </span>
+              <span>Sign in with Google</span>
+            </a> <p>(No signup required <i class="fas fa-thumbs-up"></i>)</p>
+            <!-- <a href="{% provider_login_url 'google' %}" class="btn btn-danger">
+              <i class="fab fa-google"></i> Sign in with Google
+            </a> -->
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="loading-overlay" style="display: none;">
+      <div class="loader"></div>
+    </div>
+    </section>
+    <script>
+      $(document).ready(function() {
+        $("#login-button").click(function(event) {
+          event.preventDefault();
+          
+          const usernameInput = $("#username").val();
+          const passwordInput = $("#password").val();
+          $(".loading-overlay").show();
+  
+          $.ajax({
+            url: "{% url 'promptbook:login' %}",
+            type: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": "{{ csrf_token }}"
+            },
+            data: JSON.stringify({
+              username: usernameInput,
+              password: passwordInput
+            }),
+            success: function() {
+              window.location.href = "{% url 'promptbook:list_categories' %}";
+            },
+            error: function(xhr, status, error) {
+              console.error(xhr.responseText);
+              $(".loading-overlay").hide();
+              // Display the error message
+              $("#error-message").text("Incorrect username or password. Please try again.");
+              $("#error-message").show();
+            }
+          });
+        });
+      });
+    </script>
+  
+{% endblock %}
