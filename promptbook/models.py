@@ -40,6 +40,7 @@ class Category(models.Model):
 
 
 class Prompt(models.Model):
+    name = models.CharField(max_length=255)
     text = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
     created_at = models.DateTimeField(auto_now_add=True)

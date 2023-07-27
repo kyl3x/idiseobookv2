@@ -94,6 +94,7 @@ def editor(request):
 
     if request.method == 'POST':
         is_public = False
+        name_text = request.POST['name_text']
         prompt_text = request.POST['prompt_text']
         category_id = request.POST['category']
         selected_labels = request.POST.getlist('labels')
@@ -103,7 +104,7 @@ def editor(request):
             is_public = True
 
         category = Category.objects.get(id=category_id)
-        prompt = Prompt(text=prompt_text, category=category,
+        prompt = Prompt(name=name_text, text=prompt_text, category=category,
                         owner=request.user, is_public=is_public)
         # prompt.save()
 
@@ -178,6 +179,7 @@ def edit_prompt(request, prompt_id):
         try:
             data = json.loads(request.body)
             prompt = Prompt.objects.get(pk=prompt_id)
+            prompt.name = data.get('name', prompt.name)
             prompt.text = data.get('text', prompt.text)
             prompt.save()
             return JsonResponse({'status': 'success'})

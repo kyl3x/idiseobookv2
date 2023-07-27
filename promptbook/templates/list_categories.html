@@ -151,7 +151,7 @@
             <p class="is-size-7 has-text-weight-semibold">Recetnly added prompts:</p>
             <ul>
               {% for prompt in category.recent_prompts %}
-              <li class="prompt-preview">* {{ prompt.text|truncatechars:50 }}</li>
+              <li class="prompt-preview">* {{ prompt.name|truncatechars:50 }}</li>
               {% empty %}
               <li>None</li>
               {% endfor %}

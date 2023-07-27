@@ -8,6 +8,7 @@ import csv
 import pandas as pd
 import re
 import io
+import os
 from fuzzywuzzy import fuzz, process
 from django.http import JsonResponse
 import tempfile
@@ -18,7 +19,7 @@ from django.contrib import messages
 
 # Create your views here.
 
-openai.api_key = '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'
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
 def index(request):
 	return render(request,'main/index.html')
