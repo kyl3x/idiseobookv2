@@ -26,7 +26,7 @@ MEDIA_DIR = Path(BASE_DIR) / 'media'
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-rb0egq)dg#ap&oi@+yc4vgt@b5qu^$jaxzd6mo(&_g=u7&ulnn'
+SECRET_KEY = 'django-insecure-rb0egq)dg#ap&oi@+yc4vgt@b5qu^$jaxzd6mo(&_g=u7&ulnn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
