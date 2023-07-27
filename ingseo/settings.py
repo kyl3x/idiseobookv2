@@ -174,7 +174,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'productionfiles')
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'templates/main/assets')]
 
-
 #MEDIA
 MEDIA_ROOT = MEDIA_DIR
 MEDIA_URL = 'media/'
