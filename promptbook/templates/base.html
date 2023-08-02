@@ -1,5 +1,6 @@
 {% load static %}
 {% load tz %} 
+{% load ratings %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -338,5 +339,10 @@
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+
+  <!-- Star Ratings -->
+  <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
+<script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
+
 </body>
 </html>

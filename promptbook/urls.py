@@ -23,6 +23,7 @@ urlpatterns = [
     path('upload_avatar/', views.upload_avatar, name='upload_avatar'),
     path('create_category/', views.create_category, name='create_category'),
     path('categories/<int:category_id>/toggle_pinned/', views.toggle_pinned_category, name='toggle_pinned_category'),
+    path('ratings/', include('star_ratings.urls', namespace='ratings')),
 ]
 
 api_urls = [

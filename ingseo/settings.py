@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'rest_framework',
     "reversion",
+    "star_ratings",
 ]
 
 MIDDLEWARE = [
@@ -90,6 +91,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'ingseo.urls'
@@ -170,9 +172,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'productionfiles')
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'templates/main/assets')]
+STATICFILES_DIRS = [STATIC_DIR,]
+STATIC_ROOT = BASE_DIR / 'productionfiles'
 
 #MEDIA
 MEDIA_ROOT = MEDIA_DIR
@@ -191,3 +193,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # EMAIL_HOST_USER = 'hi@email.com'
 # EMAIL_HOST_PASSWORD = 'password'
 # DEFAULT_FROM_EMAIL = 'hi@email.com'
+
+STAR_RATINGS_RERATE = False  # Prohibit users from altering their ratings
+STAR_RATINGS_RERATE_SAME_DELETE = True  # Allow users to delete a rating by selecting the same score again
+STAR_RATINGS_CLEARABLE = True  # Allow users to delete a rating via a clear button
+STAR_RATINGS_RANGE = 5  # Change the number of rating stars
+STAR_RATINGS_ANONYMOUS = True  # Enable anonymous rating

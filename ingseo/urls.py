@@ -27,5 +27,6 @@ urlpatterns = [
     path('promptbook/',include('promptbook.urls')),
     path('accounts/', include('allauth.urls')),
     path('api-auth/', include('rest_framework.urls')),
+    path('ratings/', include('star_ratings.urls', namespace='ratings')),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
